@@ -1,0 +1,159 @@
+[
+  {
+    "case_id": "HIST-KHARIF-F-2011-08",
+    "recorded_date": "2011-10-24",
+    "season": "Kharif",
+    "phenophase": "Flowering",
+    "duration": 5,
+    "psi_values": {
+      "Tmax": 31.8,
+      "Tmin": 21.5,
+      "RHmax": 86.0,
+      "RHmin": 60.0,
+      "RF": 42.5
+    },
+    "temp_deviations": {
+      "Tmax": -0.4,
+      "Tmin": 0.6
+    },
+    "crisp_categories": {
+      "Tmax": "Little change",
+      "Tmin": "Little change",
+      "RHmax": "Very high",
+      "RHmin": "Moderate",
+      "RF": "Rather heavy rain"
+    },
+    "agro_context": {
+      "u_soil": "Đất phù sa ngọt",
+      "u_variety": "Giống ngắn ngày (90-100 ngày)",
+      "u_pest": "Nguy cơ bùng phát dịch đạo ôn/rầy nâu (Mức 2)",
+      "u_ndvi": "NDVI Rất cao (>0.7 - Thừa đạm)"
+    },
+    "expert_advisory_en": "During Flowering stage under Rather Heavy Rain and Very High Humidity (>85%), maintain shallow water level (2-3 cm) and clear drainage channels immediately. Suspend all top-dressing nitrogen fertilizers due to dense canopy (NDVI > 0.7). Spray Tricyclazole 75% WP @ 0.6 g/L (300 g/ha) during rain-free afternoon hours to prevent neck blast (Pyricularia oryzae).",
+    "expert_advisory_vi": "Lúa đang giai đoạn Trổ bông gặp mưa khá to (35.6–64.4 mm) và độ ẩm rất cao (>85%): (1) Khơi thông rãnh thoát nước ngay, chỉ giữ mực nước nông 2–3 cm trên mặt ruộng; (2) Ngưng tuyệt đối việc bón thêm phân đạm do chỉ số lá NDVI cao (>0.7); (3) Tranh thủ tạnh ráo buổi chiều phun phòng bệnh đạo ôn cổ bông bằng hoạt chất Tricyclazole 75WP liều chuẩn 300 g/ha (pha 0.6 g/lít nước, lượng nước phun 500 lít/ha).",
+    "dosage_norms_per_ha": {
+      "tricyclazole_75wp_gram": 300,
+      "spray_water_liter": 500,
+      "urea_kg": 0,
+      "potash_kcl_kg": 25
+    }
+  },
+  {
+    "case_id": "HIST-KHARIF-MT-2013-04",
+    "recorded_date": "2013-09-02",
+    "season": "Kharif",
+    "phenophase": "Maximum Tillering",
+    "duration": 5,
+    "psi_values": {
+      "Tmax": 32.4,
+      "Tmin": 22.8,
+      "RHmax": 84.0,
+      "RHmin": 64.0,
+      "RF": 18.2
+    },
+    "temp_deviations": {
+      "Tmax": 0.2,
+      "Tmin": 0.5
+    },
+    "crisp_categories": {
+      "Tmax": "Little change",
+      "Tmin": "Little change",
+      "RHmax": "Very high",
+      "RHmin": "High",
+      "RF": "Moderate rain"
+    },
+    "agro_context": {
+      "u_soil": "Đất phèn hoạt động",
+      "u_variety": "Giống kháng rầy",
+      "u_pest": "Cảnh báo nhẹ (Mức 1)",
+      "u_ndvi": "NDVI Chuẩn (0.3-0.6)"
+    },
+    "expert_advisory_en": "At Maximum Tillering under Moderate Rain and High Humidity on acid sulfate soil: Maintain 3-5 cm standing water to suppress alum toxicity. Apply split potassium and phosphorus; reduce urea rate by 20% to avoid leaf blast and brown planthopper.",
+    "expert_advisory_vi": "Giai đoạn Đẻ nhánh tối đa trên nền đất phèn có mưa vừa và ẩm độ cao: (1) Giữ mực nước ruộng ổn định 3–5 cm để ém phèn, không để mặt ruộng khô nứt; (2) Bón thúc cân đối Lân + Kali (40 kg KCl/ha), giảm 20% lượng đạm Ure (chỉ bón 35 kg Ure/ha); (3) Thăm đồng vạch gốc lúa kiểm tra mật số rầy nâu tuổi 1–2 và vết chấm kim đạo ôn lá.",
+    "dosage_norms_per_ha": {
+      "tricyclazole_75wp_gram": 250,
+      "spray_water_liter": 400,
+      "urea_kg": 35,
+      "potash_kcl_kg": 40
+    }
+  },
+  {
+    "case_id": "HIST-RABI-F-2014-02",
+    "recorded_date": "2014-03-18",
+    "season": "Rabi",
+    "phenophase": "Flowering",
+    "duration": 5,
+    "psi_values": {
+      "Tmax": 31.2,
+      "Tmin": 14.8,
+      "RHmax": 73.8,
+      "RHmin": 42.4,
+      "RF": 2.0
+    },
+    "temp_deviations": {
+      "Tmax": -0.8,
+      "Tmin": -3.6
+    },
+    "crisp_categories": {
+      "Tmax": "Little change",
+      "Tmin": "Appreciable fall",
+      "RHmax": "High",
+      "RHmin": "Moderate",
+      "RF": "Very light rain"
+    },
+    "agro_context": {
+      "u_soil": "Đất nhiễm mặn (>2‰)",
+      "u_variety": "Giống chịu mặn/chịu hạn",
+      "u_pest": "An toàn (Mức 0)",
+      "u_ndvi": "NDVI Thấp (<0.3 - Thiếu dinh dưỡng)"
+    },
+    "expert_advisory_en": "During Rabi Flowering with Appreciable Fall in night temperature (Tmin deviation -3.6°C) and saline soil risk: Maintain 5-7 cm fresh water layer to buffer night chill and flush salinity. Foliar spray of Potassium Nitrate (KNO3 1%) + Boron is recommended to enhance pollen viability.",
+    "expert_advisory_vi": "Lúa vụ Đông Xuân (Rabi) giai đoạn Trổ bông gặp nền nhiệt đêm giảm đáng kể (Tmin giảm 3.6°C) trên vùng đất có nguy cơ nhiễm mặn: (1) Đo độ mặn nguồn nước trước khi bơm, giữ lớp nước ngọt 5–7 cm trong ruộng để giữ ấm gốc lúa ban đêm và ém mặn; (2) Phun bổ sung phân bón lá Kali Nitrat (KNO3 1%, 5 kg/ha) kết hợp Bo giúp tăng sức sống hạt phấn và hạn chế lem lép hạt.",
+    "dosage_norms_per_ha": {
+      "tricyclazole_75wp_gram": 0,
+      "kno3_foliar_kg": 5,
+      "spray_water_liter": 400,
+      "urea_kg": 0,
+      "potash_kcl_kg": 30
+    }
+  },
+  {
+    "case_id": "HIST-SUMMER-M-2012-05",
+    "recorded_date": "2012-05-04",
+    "season": "Summer",
+    "phenophase": "Maturity",
+    "duration": 5,
+    "psi_values": {
+      "Tmax": 38.6,
+      "Tmin": 24.5,
+      "RHmax": 52.0,
+      "RHmin": 24.0,
+      "RF": 0.0
+    },
+    "temp_deviations": {
+      "Tmax": 3.5,
+      "Tmin": 1.0
+    },
+    "crisp_categories": {
+      "Tmax": "Appreciable rise",
+      "Tmin": "Little change",
+      "RHmax": "Moderate",
+      "RHmin": "Low",
+      "RF": "No rain"
+    },
+    "agro_context": {
+      "u_soil": "Đất phù sa ngọt",
+      "u_variety": "Giống ngắn ngày (90-100 ngày)",
+      "u_pest": "An toàn (Mức 0)",
+      "u_ndvi": "NDVI Chuẩn (0.3-0.6)"
+    },
+    "expert_advisory_en": "At Maturity stage under dry hot weather (Appreciable rise in Tmax, Low RHmin, No rain): Drain field water completely 7-10 days prior to harvest for uniform grain ripening and combine harvester operation. Harvest at 85-90% golden grain maturity to prevent sun-cracking.",
+    "expert_advisory_vi": "Giai đoạn Chín / Thu hoạch trong điều kiện nắng nóng khô (Tmax tăng đáng kể, không mưa, RHmin thấp): (1) Rút cạn nước ruộng trước thu hoạch 7–10 ngày để mặt đất cứng giúp máy gặt đập liên hợp vận hành; (2) Thu hoạch đúng độ chín (khi 85–90% số hạt trên bông đã chín vàng) tránh phơi nắng quá già trên đồng làm rạn nứt hạt gạo và giảm tỷ lệ gạo nguyên.",
+    "dosage_norms_per_ha": {
+      "tricyclazole_75wp_gram": 0,
+      "spray_water_liter": 0,
+      "urea_kg": 0,
+      "potash_kcl_kg": 0
+    }
+  }
+]

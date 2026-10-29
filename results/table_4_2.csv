@@ -1,0 +1,6 @@
+n,Variables,WC_d1,CWC_d1,CWC_d5,Gain_d1
+1,{Tmax},98.0,100.0,98.0,+2.0%
+2,"{Tmax, Tmin}",20.0,99.0,96.0,+79.0%
+3,"{Tmax, Tmin, RHmax}",0.0,96.0,84.0,+96.0%
+4,"{Tmax, Tmin, RHmax, RHmin}",0.0,87.0,87.0,+87.0%
+5,"{Tmax, Tmin, RHmax, RHmin, RF}",0.0,81.0,76.0,+81.0%
