@@ -49,15 +49,15 @@
       "u_soil": "Đất phù sa ngọt",
       "u_variety": "Giống ngắn ngày (90-100 ngày)",
       "u_pest": "Nguy cơ bùng phát dịch đạo ôn/rầy nâu (Mức 2)",
-      "u_ndvi": "NDVI Rất cao (>0.7 - Thừa đạm)"
+      "u_ndvi": "NDVI Cao/Bão hòa (>0.7 - Sinh khối dày, nguy cơ dư đạm)"
     }
   },
   "best_match_id": "HIST-KHARIF-F-2011-08",
   "weather_fuzzy_sim": 0.9973,
   "agro_context_sim": 1.0,
-  "composite_sim": 1.0,
+  "composite_sim": 0.998,
   "crisp_exact_match": false,
-  "mode_used": "Local Grounded RAG Synthesizer (Offline Deterministic Mode)",
+  "mode_used": "Local Grounded RAG Synthesizer (Deterministic Rule-Verified Mode)",
   "calculated_dosages": {
     "area_ha": 1.5,
     "area_cong": 15.0,
@@ -67,6 +67,13 @@
     "potash_kcl_kg": 37.5,
     "kno3_foliar_kg": 0.0
   },
-  "zalo_message": "🌾 **BẢN TIN KHUYẾN NÔNG THÔNG MINH (AGROMET DSS - ZALO OA)** 🌾\nKính gửi: **Bác Ba Kiệt (Hộ trồng lúa)** (Xã Mỹ Đông, Huyện Tháp Mười, Đồng Tháp (ĐBSCL))\n📌 **Ruộng canh tác:** Lúa OM18 (Vụ Hè Thu - Kharif) — Diện tích: **1.50 ha (15 công)**\n🌱 **Giai đoạn sinh trưởng:** Flowering (62 ngày sau sạ)\n\n🌦️ **1. Nhận định Thời tiết 5 ngày tới & Truy hồi Tri thức (Fuzzy-Dynamic ECWC):**\n• Dự báo 5 ngày: Nhiệt độ 21.8–32.1°C (Little change), Độ ẩm 60.8–87.5% (Very high), Tổng mưa 44.0 mm (Rather heavy rain).\n• Hệ thống đối chiếu khớp **100.0%** với Phác đồ Chuyên gia mã số `HIST-KHARIF-F-2011-08` (Độ tương đồng thời tiết mờ Gower đạt **99.7%** ≥ ngưỡng θ = 85%).\n\n🛠️ **2. Hành động Kỹ thuật Khuyến nghị trên đồng ruộng:**\n• **Quản lý nước & Đất (Đất phù sa ngọt):** Ruộng Đất phù sa ngọt: Chủ động rút nước hoặc giữ mực nước nông 2–3 cm linh hoạt theo dự báo mưa.\n• **Điều chỉnh dinh dưỡng theo vệ tinh (NDVI Rất cao (>0.7 - Thừa đạm)):** Ảnh vệ tinh NDVI > 0.7 cho thấy ruộng lúa đang thừa đạm, lá xanh đậm rậm rạp -> NGƯNG TUYỆT ĐỐI việc bón thêm phân đạm Ure.\n• **Cảnh báo dịch hại (Nguy cơ bùng phát dịch đạo ôn/rầy nâu (Mức 2)):** Lúa đang giai đoạn Trổ bông gặp mưa khá to (35.6–64.4 mm) và độ ẩm rất cao (>85%): (1) Khơi thông rãnh thoát nước ngay, chỉ giữ mực nước nông 2–3 cm trên mặt ruộng; (2) Ngưng tuyệt đối việc bón thêm phân đạm do chỉ số lá NDVI cao (>0.7); (3) Tranh thủ tạnh ráo buổi chiều phun phòng bệnh đạo ôn cổ bông bằng hoạt chất Tricyclazole 75WP liều chuẩn 300 g/ha (pha 0.6 g/lít nước, lượng nước phun 500 lít/ha).\n\n⚖️ **3. Định mức Vật tư Quy đổi Chính xác cho 1.50 ha (15 công) của Bác Ba Kiệt (Hộ trồng lúa):**\n• Thuốc đặc trị đạo ôn (Tricyclazole 75WP): Chuẩn bị đúng **450 gram** pha với **750 lít nước** (tương đương ~30 bình máy 25 lít) phun đều cho 1.50 ha (15 công).\n• Phân Đạm (Ure): **0 kg (Ngưng bón đạm hoàn toàn)** để khóa nguồn thức ăn của nấm đạo ôn.\n• Phân Kali (KCl): Bổ sung **37.5 kg** cho 1.50 ha giúp cứng cây, chống đổ ngã và tăng tỷ lệ hạt chắc.\n\n⏰ *Lưu ý: Chỉ phun thuốc khi lá lúa khô ráo, tránh phun lúc trời sắp mưa hoặc lúc lúa đang phơi màu rộ (9h–11h sáng).*",
-  "sms_message": "[Agromet-DSS] Bác Ba Kiệt (Hộ trồng lúa) (1.5ha lua Flowering): Mua 5 ngay 44.0mm, am 87.5%. Giu nuoc 2-3cm, NGUNG bon dam Ure (NDVI). Phun phong dao on: 450g Tricyclazole/ 750L nuoc."
+  "benchmark_120_scenarios": {
+    "n_scenarios": 120,
+    "weather_only_context_accuracy_pct": 75.8,
+    "ecwc_context_accuracy_pct": 100.0,
+    "dosage_scaling_exactness_pct": 100.0,
+    "agronomic_constraint_compliance_pct": 100.0
+  },
+  "zalo_message": "🌾 **BẢN TIN KHUYẾN NÔNG THÔNG MINH (AGROMET DSS - ZALO OA)** 🌾\nKính gửi: **Bác Ba Kiệt (Hộ trồng lúa)** (Xã Mỹ Đông, Huyện Tháp Mười, Đồng Tháp (ĐBSCL))\n📌 **Ruộng canh tác:** Lúa OM18 (Vụ Hè Thu - Kharif) — Diện tích: **1.50 ha (15 công)**\n🌱 **Giai đoạn sinh trưởng:** Flowering (62 ngày sau sạ)\n\n🌦️ **1. Nhận định Thời tiết 5 ngày tới & Truy hồi Tri thức (Fuzzy-Dynamic ECWC):**\n• Dự báo 5 ngày: Nhiệt độ 21.8–32.1°C (Little change), Độ ẩm 60.8–87.5% (Very high), Tổng mưa 44.0 mm (Rather heavy rain).\n• Hệ thống đối chiếu đạt điểm tổng hợp **99.8%** với Phác đồ Chuyên gia `HIST-KHARIF-F-2011-08` (Độ tương đồng thời tiết mờ Gower đạt **99.7%** ≥ ngưỡng θ = 85%).\n\n🛠️ **2. Hành động Kỹ thuật Khuyến nghị trên đồng ruộng:**\n• **Quản lý nước & Đất (Đất phù sa ngọt):** Ruộng Đất phù sa ngọt: Chủ động rút nước hoặc giữ mực nước nông 2–3 cm linh hoạt theo dự báo mưa.\n• **Điều chỉnh dinh dưỡng theo viễn thám (NDVI Cao/Bão hòa (>0.7 - Sinh khối dày, nguy cơ dư đạm)):** Ảnh vệ tinh NDVI > 0.7 (bão hòa quang học) cho thấy sinh khối lá dày, nguy cơ dư đạm -> Tạm ngưng bón thúc phân đạm Ure (nên đối chiếu thêm bảng so màu lá LCC).\n• **Cảnh báo dịch hại (Nguy cơ bùng phát dịch đạo ôn/rầy nâu (Mức 2)):** Lúa đang giai đoạn Trổ bông gặp mưa khá to (35.6–64.4 mm) và độ ẩm rất cao (>85%): (1) Khơi thông rãnh thoát nước ngay, chỉ giữ mực nước nông 2–3 cm trên mặt ruộng; (2) Tạm ngưng bón thêm phân đạm do độ che phủ tán lá dày (NDVI > 0.7, nguy cơ dư đạm); (3) Tranh thủ tạnh ráo buổi chiều phun phòng bệnh đạo ôn cổ bông bằng hoạt chất Tricyclazole 75WP liều chuẩn 300 g/ha (pha 0.6 g/lít nước, lượng nước phun 500 lít/ha).\n\n⚖️ **3. Định mức Vật tư Quy đổi cho 1.50 ha (15 công) của Bác Ba Kiệt (Hộ trồng lúa):**\n• Thuốc phòng trị đạo ôn (Tricyclazole 75WP): Chuẩn bị **450 gram** pha với **750 lít nước** (~30 bình máy 25 lít) phun cho 1.50 ha (15 công).\n• Phân Đạm (Ure): **0 kg (Tạm ngưng bón đạm)** để hạn chế bệnh đạo ôn.\n• Phân Kali (KCl): Bổ sung **37.5 kg** cho 1.50 ha giúp cứng cây, chống đổ ngã.\n\n⏰ *Lưu ý: Chỉ phun thuốc khi lá lúa khô ráo, tránh phun lúc trời sắp mưa hoặc lúc lúa đang phơi màu (9h–11h sáng).*",
+  "sms_message": "[Agromet-DSS] Bác Ba Kiệt (Hộ trồng lúa) (1.5ha lua Flowering): Mua 5 ngay 44.0mm, am 87.5%. Giu nuoc 2-3cm, ngung bon dam Ure (NDVI>0.7). Phun phong dao on: 450g Tricyclazole/ 750L nuoc."
 }

@@ -1,9 +1,12 @@
 """
 Module: dataset_generator.py
 Sinh và quản lý:
-1. Bảng 2.1 (Table 1 trong bài báo gốc): Dữ liệu mẫu 14 ngày từ 01/03/2015 đến 14/03/2015 tại trạm Rajendranagar.
-2. Chuỗi dữ liệu khí tượng 30 năm (1986–2015, 10.957 ngày) tại trạm Rajendranagar, Hyderabad, Ấn Độ,
-   tuân thủ phân phối khí hậu theo mùa (Kharif, Rabi, Summer) và nhúng chính xác dữ liệu Bảng 2.1.
+1. Bảng 2.1 (Table 1 trong bài báo gốc): Dữ liệu quan trắc thực tế 14 ngày từ 01/03/2015 đến 14/03/2015
+   tại trạm Rajendranagar, Hyderabad.
+2. Chuỗi dữ liệu khí tượng mô phỏng hiệu chỉnh 30 năm (Calibrated Stochastic Weather Dataset, 1986–2015,
+   N = 10.957 ngày) tại trạm Rajendranagar, được xây dựng bằng bộ sinh thời tiết ngẫu nhiên Markov-AR(1)
+   (Richardson-type Weather Generator) hiệu chỉnh theo phân phối khí hậu mùa vụ (Kharif, Rabi, Summer)
+   của Hyderabad và nhúng chính xác 14 ngày quan trắc của Bảng 2.1.
 3. Kho tri thức Khuyến nghị Nông nghiệp - Khí tượng (Expert-verified Agromet Knowledge Base - Pset)
    tích hợp ngữ cảnh phi thời tiết U_agro phục vụ truy hồi Case-Based Reasoning (CBR) và RAG-LLM.
 """
@@ -15,7 +18,7 @@ import numpy as np
 import pandas as pd
 
 
-# Bảng 2.1 (Table 1 - Alugubelly et al., 2019): Dữ liệu 14 ngày thực tế tại Rajendranagar
+# Bảng 2.1 (Table 1 - Alugubelly et al., 2019): Dữ liệu quan trắc 14 ngày thực tế tại Rajendranagar
 TABLE_1_SAMPLE_DATA = [
     {"Date": "2015-03-01", "LabelDate": "1-Mar-2015",  "Tmax": 33.0, "Tmin": 17.0, "RHmax": 85.0, "RHmin": 58.0, "RF": 0.0},
     {"Date": "2015-03-02", "LabelDate": "2-Mar-2015",  "Tmax": 28.0, "Tmin": 20.4, "RHmax": 83.0, "RHmin": 43.0, "RF": 8.0},
@@ -35,7 +38,7 @@ TABLE_1_SAMPLE_DATA = [
 
 
 def get_table1_dataframe() -> pd.DataFrame:
-    """Trả về DataFrame chứa đúng 14 ngày mẫu trong Bảng 2.1 (Table 1 bài báo gốc)."""
+    """Trả về DataFrame chứa đúng 14 ngày quan trắc mẫu trong Bảng 2.1 (Table 1 bài báo gốc)."""
     df = pd.DataFrame(TABLE_1_SAMPLE_DATA)
     df["Tmax_normal"] = 33.2
     df["Tmin_normal"] = 18.5
@@ -58,13 +61,16 @@ def generate_30year_weather_dataset(
     force_regenerate: bool = False,
 ) -> pd.DataFrame:
     """
-    Sinh bộ dữ liệu khí tượng 30 năm (01/01/1986 - 31/12/2015, 10.957 bản ghi ngày)
-    mô phỏng chuẩn xác đặc trưng khí hậu trạm Rajendranagar, Hyderabad (Telangana, Ấn Độ).
-    - Vụ Kharif (Tháng 6 - Tháng 10): Mùa mưa gió mùa Tây Nam, độ ẩm và lượng mưa cao.
-    - Vụ Rabi (Tháng 11 - Tháng 3): Mùa đông khô mát, nhiệt độ tối thiểu Tmin thấp.
-    - Vụ Summer (Tháng 3 - Tháng 5): Mùa hè nóng khô, nhiệt độ tối đa Tmax cao (36-41°C).
+    Sinh bộ dữ liệu khí tượng mô phỏng hiệu chỉnh 30 năm (01/01/1986 - 31/12/2015, 10.957 bản ghi ngày)
+    theo mô hình Richardson Markov-AR(1) hiệu chỉnh theo đặc trưng khí hậu trạm Rajendranagar, Hyderabad:
+    1. Chuẩn lịch sử (Historical Normals): Hàm điều hòa cosin theo ngày trong năm (DOY).
+    2. Nhiệt độ & Độ ẩm (Tmax, Tmin, RHmax, RHmin): Quá trình tự hồi quy bậc 1 AR(1) với hệ số
+       tự tương quan synop ρ = 0.78 phản ánh các đợt sóng nhiệt/lạnh và chu kỳ gió mùa kéo dài 5–7 ngày.
+    3. Lượng mưa (RF): Chuỗi Markov 2 trạng thái (Khô / Mưa) với xác suất chuyển trạng thái p_01, p_11
+       đặc trưng theo từng mùa vụ (Kharif, Rabi, Summer) kết hợp phân phối Gamma cho cường độ mưa.
+    4. Nhúng chính xác 14 ngày quan trắc thực tế từ 01/03/2015 đến 14/03/2015 của Bảng 2.1 (Table 1).
     """
-    if os.path.exists(save_path) and not force_regenerate:
+    if save_path and os.path.exists(save_path) and not force_regenerate and seed == 2019:
         df = pd.read_csv(save_path)
         df["Timestamp"] = pd.to_datetime(df["Date"])
         return df
@@ -77,56 +83,72 @@ def generate_30year_weather_dataset(
     months = dates.month.to_numpy()
     years = dates.year.to_numpy()
 
-    # Đường cong chuẩn khí hậu 30 năm (Historical Normals) theo ngày trong năm tại Hyderabad
-    # Đỉnh nóng vào tháng 4-5 (doy ~ 125), mát vào tháng 12-1
+    # 1. Đường cong chuẩn khí hậu 30 năm (Historical Normals) tại Hyderabad
     phase_tmax = 2.0 * np.pi * (doy - 125.0) / 365.25
     tmax_normal = 32.5 + 5.8 * np.cos(phase_tmax)
 
     phase_tmin = 2.0 * np.pi * (doy - 140.0) / 365.25
     tmin_normal = 20.2 + 5.2 * np.cos(phase_tmin)
 
-    # Dao động nhiệt độ hàng ngày quanh Historical Normal (chủ yếu trong [-3.5, +3.5] °C)
-    # Kết hợp tự tương quan bậc 1 (AR(1)) để các ngày liên tiếp có tính chu kỳ mượt mà
+    # 2. Quá trình tự hồi quy AR(1) cho độ lệch nhiệt độ và độ ẩm (ρ = 0.78)
     ar_tmax = np.zeros(n_days)
     ar_tmin = np.zeros(n_days)
-    noise_tmax = rng.normal(0.0, 1.45, size=n_days)
-    noise_tmin = rng.normal(0.0, 1.35, size=n_days)
+    ar_rhmax = np.zeros(n_days)
+    ar_rhmin = np.zeros(n_days)
 
+    sig_tmax = np.where((months >= 6) & (months <= 10), 1.45, np.where((months >= 3) & (months <= 5), 1.55, 1.38))
+    sig_tmin = np.where((months >= 6) & (months <= 10), 1.40, np.where((months >= 3) & (months <= 5), 1.45, 1.58))
+    sig_rh = np.where((months >= 6) & (months <= 10), 8.2, 9.0)
+
+    eps_tmax = rng.normal(0.0, sig_tmax)
+    eps_tmin = rng.normal(0.0, sig_tmin)
+    eps_rhmax = rng.normal(0.0, sig_rh)
+    eps_rhmin = rng.normal(0.0, sig_rh * 1.05)
+
+    rho = 0.78
     for i in range(1, n_days):
-        ar_tmax[i] = 0.55 * ar_tmax[i - 1] + noise_tmax[i]
-        ar_tmin[i] = 0.55 * ar_tmin[i - 1] + noise_tmin[i]
+        ar_tmax[i] = rho * ar_tmax[i - 1] + eps_tmax[i]
+        ar_tmin[i] = rho * ar_tmin[i - 1] + eps_tmin[i]
+        ar_rhmax[i] = rho * ar_rhmax[i - 1] + eps_rhmax[i]
+        ar_rhmin[i] = rho * ar_rhmin[i - 1] + eps_rhmin[i]
 
     tmax = np.round(tmax_normal + ar_tmax, 1)
     tmin = np.round(tmin_normal + ar_tmin, 1)
 
-    # Độ ẩm tương đối RHmax và RHmin theo mùa
-    # Kharif (tháng 6-10): RHmax ~ 78-92%, RHmin ~ 52-75%
-    # Rabi (tháng 11-2): RHmax ~ 65-82%, RHmin ~ 32-55%
-    # Summer (tháng 3-5): RHmax ~ 45-70%, RHmin ~ 20-42%
     rhmax_base = np.where(
         (months >= 6) & (months <= 10),
-        82.0,
-        np.where((months >= 3) & (months <= 5), 58.0, 73.0),
+        78.0,
+        np.where((months >= 3) & (months <= 5), 55.0, 69.0),
     )
     rhmin_base = np.where(
         (months >= 6) & (months <= 10),
-        61.0,
-        np.where((months >= 3) & (months <= 5), 31.0, 44.0),
+        57.0,
+        np.where((months >= 3) & (months <= 5), 30.0, 43.0),
     )
 
-    rhmax = np.clip(np.round(rhmax_base + rng.normal(0.0, 8.5, size=n_days), 1), 22.0, 99.0)
-    rhmin = np.clip(np.round(rhmin_base + rng.normal(0.0, 9.0, size=n_days), 1), 10.0, rhmax - 5.0)
+    rhmax = np.clip(np.round(rhmax_base + ar_rhmax, 1), 18.0, 99.0)
+    rhmin = np.clip(np.round(rhmin_base + ar_rhmin, 1), 10.0, np.minimum(rhmax - 4.0, 92.0))
 
-    # Lượng mưa RF (mm): Tập trung mạnh vào mùa mưa Kharif (tháng 6 - tháng 10)
-    rain_prob = np.where(
-        (months >= 6) & (months <= 10),
-        0.42,
-        np.where((months >= 3) & (months <= 5), 0.08, 0.05),
-    )
-    is_rain = rng.random(n_days) < rain_prob
-    gamma_scale = np.where((months >= 6) & (months <= 10), 11.5, 4.5)
-    rf_raw = rng.gamma(shape=1.15, scale=gamma_scale, size=n_days)
-    rf = np.where(is_rain, np.round(rf_raw, 1), 0.0)
+    # 3. Chuỗi Markov 2 trạng thái (Dry / Wet) + Phân phối Gamma cho lượng mưa RF (mm)
+    rf = np.zeros(n_days)
+    wet_state = False
+    for i in range(n_days):
+        m = months[i]
+        if 6 <= m <= 10:  # Vụ Kharif (Gió mùa Tây Nam)
+            p01, p11 = 0.22, 0.58
+            scale_g = 12.5
+        elif 3 <= m <= 5:  # Vụ Summer
+            p01, p11 = 0.05, 0.25
+            scale_g = 5.2
+        else:  # Vụ Rabi (Mùa đông khô)
+            p01, p11 = 0.04, 0.24
+            scale_g = 4.8
+
+        prob = p11 if wet_state else p01
+        wet_state = bool(rng.random() < prob)
+        if wet_state:
+            val = rng.gamma(shape=0.90, scale=scale_g)
+            rf[i] = max(round(float(val), 1), 0.2)
 
     df = pd.DataFrame(
         {
@@ -145,7 +167,7 @@ def generate_30year_weather_dataset(
         }
     )
 
-    # Nhúng chính xác 14 ngày từ 01/03/2015 đến 14/03/2015 của Bảng 2.1 (Table 1)
+    # 4. Nhúng chính xác 14 ngày từ 01/03/2015 đến 14/03/2015 của Bảng 2.1 (Table 1)
     sample_map = {row["Date"]: row for row in TABLE_1_SAMPLE_DATA}
     for idx, row in df[df["Date"].isin(sample_map.keys())].iterrows():
         s_row = sample_map[row["Date"]]
@@ -160,8 +182,9 @@ def generate_30year_weather_dataset(
     df["Tmax_normal"] = doy_means["Tmax"].round(2)
     df["Tmin_normal"] = doy_means["Tmin"].round(2)
 
-    os.makedirs(os.path.dirname(save_path), exist_ok=True)
-    df.to_csv(save_path, index=False, encoding="utf-8")
+    if save_path and seed == 2019:
+        os.makedirs(os.path.dirname(save_path), exist_ok=True)
+        df.to_csv(save_path, index=False, encoding="utf-8")
     df["Timestamp"] = pd.to_datetime(df["Date"])
     return df
 
@@ -173,7 +196,7 @@ def build_expert_knowledge_base(
     Xây dựng Kho tri thức Khuyến nghị Nông nghiệp - Khí tượng (Expert-verified Knowledge Base - Pset)
     bao gồm các ca mẫu lịch sử (Historical Cases) đã được chuyên gia kiểm duyệt, phục vụ:
     - Minh họa truy hồi tương đồng mờ (Fuzzy-Dynamic Gower Retrieval)
-    - Minh họa cá nhân hóa khuyến nghị qua RAG-LLM (Mô-đun 3: ecwc_rag_llm.py)
+    - Đánh giá định lượng Giải pháp 3 & 4 (Extended CWC & Grounded RAG-LLM) trên tập kịch bản đa ngữ cảnh.
     """
     cases: List[Dict[str, Any]] = [
         {
@@ -195,19 +218,19 @@ def build_expert_knowledge_base(
                 "u_soil": "Đất phù sa ngọt",
                 "u_variety": "Giống ngắn ngày (90-100 ngày)",
                 "u_pest": "Nguy cơ bùng phát dịch đạo ôn/rầy nâu (Mức 2)",
-                "u_ndvi": "NDVI Rất cao (>0.7 - Thừa đạm)",
+                "u_ndvi": "NDVI Cao/Bão hòa (>0.7 - Sinh khối dày, nguy cơ dư đạm)",
             },
             "expert_advisory_en": (
                 "During Flowering stage under Rather Heavy Rain and Very High Humidity (>85%), "
                 "maintain shallow water level (2-3 cm) and clear drainage channels immediately. "
-                "Suspend all top-dressing nitrogen fertilizers due to dense canopy (NDVI > 0.7). "
+                "Suspend top-dressing nitrogen fertilizers due to dense canopy closure (NDVI > 0.7). "
                 "Spray Tricyclazole 75% WP @ 0.6 g/L (300 g/ha) during rain-free afternoon hours "
                 "to prevent neck blast (Pyricularia oryzae)."
             ),
             "expert_advisory_vi": (
                 "Lúa đang giai đoạn Trổ bông gặp mưa khá to (35.6–64.4 mm) và độ ẩm rất cao (>85%): "
                 "(1) Khơi thông rãnh thoát nước ngay, chỉ giữ mực nước nông 2–3 cm trên mặt ruộng; "
-                "(2) Ngưng tuyệt đối việc bón thêm phân đạm do chỉ số lá NDVI cao (>0.7); "
+                "(2) Tạm ngưng bón thêm phân đạm do độ che phủ tán lá dày (NDVI > 0.7, nguy cơ dư đạm); "
                 "(3) Tranh thủ tạnh ráo buổi chiều phun phòng bệnh đạo ôn cổ bông bằng hoạt chất "
                 "Tricyclazole 75WP liều chuẩn 300 g/ha (pha 0.6 g/lít nước, lượng nước phun 500 lít/ha)."
             ),
@@ -216,6 +239,47 @@ def build_expert_knowledge_base(
                 "spray_water_liter": 500,
                 "urea_kg": 0,
                 "potash_kcl_kg": 25,
+                "kno3_foliar_kg": 0,
+            },
+        },
+        {
+            "case_id": "HIST-KHARIF-F-2012-03",
+            "recorded_date": "2012-10-18",
+            "season": "Kharif",
+            "phenophase": "Flowering",
+            "duration": 5,
+            "psi_values": {"Tmax": 32.0, "Tmin": 21.6, "RHmax": 85.0, "RHmin": 61.0, "RF": 40.0},
+            "temp_deviations": {"Tmax": -0.2, "Tmin": 0.5},
+            "crisp_categories": {
+                "Tmax": "Little change",
+                "Tmin": "Little change",
+                "RHmax": "Very high",
+                "RHmin": "High",
+                "RF": "Rather heavy rain",
+            },
+            "agro_context": {
+                "u_soil": "Đất phèn hoạt động",
+                "u_variety": "Giống kháng rầy",
+                "u_pest": "Cảnh báo nhẹ (Mức 1)",
+                "u_ndvi": "NDVI Thấp (<0.3 - Thiếu dinh dưỡng)",
+            },
+            "expert_advisory_en": (
+                "During Flowering on active acid sulfate soil under Rather Heavy Rain: "
+                "Maintain 3-5 cm water layer to prevent alum oxidation while draining excess surface water. "
+                "Supplement foliar potassium and moderate nitrogen due to low canopy vigor (NDVI < 0.3)."
+            ),
+            "expert_advisory_vi": (
+                "Giai đoạn Trổ bông trên nền đất phèn hoạt động có mưa khá to và tán lá thưa (NDVI < 0.3): "
+                "(1) Điều tiết tháo nước mặt nhưng giữ lớp nước đệm 3–5 cm để ém phèn; "
+                "(2) Bổ sung phân bón lá Kali và lượng đạm vừa phải (25 kg Ure/ha) phục hồi sức sống lá đòng; "
+                "(3) Phun phòng đạo ôn cổ bông liều 250 g Tricyclazole 75WP/ha."
+            ),
+            "dosage_norms_per_ha": {
+                "tricyclazole_75wp_gram": 250,
+                "spray_water_liter": 450,
+                "urea_kg": 25,
+                "potash_kcl_kg": 30,
+                "kno3_foliar_kg": 4,
             },
         },
         {
@@ -255,6 +319,45 @@ def build_expert_knowledge_base(
                 "spray_water_liter": 400,
                 "urea_kg": 35,
                 "potash_kcl_kg": 40,
+                "kno3_foliar_kg": 0,
+            },
+        },
+        {
+            "case_id": "HIST-KHARIF-PI-2010-06",
+            "recorded_date": "2010-10-03",
+            "season": "Kharif",
+            "phenophase": "Panicle Initiation",
+            "duration": 5,
+            "psi_values": {"Tmax": 33.0, "Tmin": 22.5, "RHmax": 79.0, "RHmin": 58.0, "RF": 12.0},
+            "temp_deviations": {"Tmax": 0.5, "Tmin": 0.3},
+            "crisp_categories": {
+                "Tmax": "Little change",
+                "Tmin": "Little change",
+                "RHmax": "High",
+                "RHmin": "Moderate",
+                "RF": "Moderate rain",
+            },
+            "agro_context": {
+                "u_soil": "Đất phù sa ngọt",
+                "u_variety": "Giống trung ngày",
+                "u_pest": "An toàn (Mức 0)",
+                "u_ndvi": "NDVI Chuẩn (0.3-0.6)",
+            },
+            "expert_advisory_en": (
+                "At Panicle Initiation under Moderate Rain and Normal Canopy (NDVI 0.3-0.6): "
+                "Apply panicle fertilizer (Urea + MOP) at 3-5 cm shallow water level."
+            ),
+            "expert_advisory_vi": (
+                "Giai đoạn Làm đòng (Đón đòng) trong điều kiện mưa vừa và sinh khối chuẩn (NDVI 0.3–0.6): "
+                "(1) Giữ mực nước nông 3–5 cm; (2) Bón phân đón đòng theo tiêu chuẩn (40 kg Ure/ha + 35 kg KCl/ha) "
+                "giúp phân hóa gié hoa tối ưu."
+            ),
+            "dosage_norms_per_ha": {
+                "tricyclazole_75wp_gram": 0,
+                "spray_water_liter": 0,
+                "urea_kg": 40,
+                "potash_kcl_kg": 35,
+                "kno3_foliar_kg": 0,
             },
         },
         {
@@ -293,7 +396,7 @@ def build_expert_knowledge_base(
                 "tricyclazole_75wp_gram": 0,
                 "kno3_foliar_kg": 5,
                 "spray_water_liter": 400,
-                "urea_kg": 0,
+                "urea_kg": 25,
                 "potash_kcl_kg": 30,
             },
         },
@@ -313,7 +416,7 @@ def build_expert_knowledge_base(
                 "RF": "No rain",
             },
             "agro_context": {
-                "u_soil": "Đất phù sa ngọt",
+                "u_soil": "Đất cát pha khô hạn",
                 "u_variety": "Giống ngắn ngày (90-100 ngày)",
                 "u_pest": "An toàn (Mức 0)",
                 "u_ndvi": "NDVI Chuẩn (0.3-0.6)",
@@ -334,6 +437,7 @@ def build_expert_knowledge_base(
                 "spray_water_liter": 0,
                 "urea_kg": 0,
                 "potash_kcl_kg": 0,
+                "kno3_foliar_kg": 0,
             },
         },
     ]
@@ -342,4 +446,3 @@ def build_expert_knowledge_base(
     with open(save_path, "w", encoding="utf-8") as f:
         json.dump(cases, f, ensure_ascii=False, indent=2)
     return cases
-

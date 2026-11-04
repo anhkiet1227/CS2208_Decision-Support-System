@@ -27,15 +27,56 @@
       "u_soil": "Đất phù sa ngọt",
       "u_variety": "Giống ngắn ngày (90-100 ngày)",
       "u_pest": "Nguy cơ bùng phát dịch đạo ôn/rầy nâu (Mức 2)",
-      "u_ndvi": "NDVI Rất cao (>0.7 - Thừa đạm)"
+      "u_ndvi": "NDVI Cao/Bão hòa (>0.7 - Sinh khối dày, nguy cơ dư đạm)"
     },
-    "expert_advisory_en": "During Flowering stage under Rather Heavy Rain and Very High Humidity (>85%), maintain shallow water level (2-3 cm) and clear drainage channels immediately. Suspend all top-dressing nitrogen fertilizers due to dense canopy (NDVI > 0.7). Spray Tricyclazole 75% WP @ 0.6 g/L (300 g/ha) during rain-free afternoon hours to prevent neck blast (Pyricularia oryzae).",
-    "expert_advisory_vi": "Lúa đang giai đoạn Trổ bông gặp mưa khá to (35.6–64.4 mm) và độ ẩm rất cao (>85%): (1) Khơi thông rãnh thoát nước ngay, chỉ giữ mực nước nông 2–3 cm trên mặt ruộng; (2) Ngưng tuyệt đối việc bón thêm phân đạm do chỉ số lá NDVI cao (>0.7); (3) Tranh thủ tạnh ráo buổi chiều phun phòng bệnh đạo ôn cổ bông bằng hoạt chất Tricyclazole 75WP liều chuẩn 300 g/ha (pha 0.6 g/lít nước, lượng nước phun 500 lít/ha).",
+    "expert_advisory_en": "During Flowering stage under Rather Heavy Rain and Very High Humidity (>85%), maintain shallow water level (2-3 cm) and clear drainage channels immediately. Suspend top-dressing nitrogen fertilizers due to dense canopy closure (NDVI > 0.7). Spray Tricyclazole 75% WP @ 0.6 g/L (300 g/ha) during rain-free afternoon hours to prevent neck blast (Pyricularia oryzae).",
+    "expert_advisory_vi": "Lúa đang giai đoạn Trổ bông gặp mưa khá to (35.6–64.4 mm) và độ ẩm rất cao (>85%): (1) Khơi thông rãnh thoát nước ngay, chỉ giữ mực nước nông 2–3 cm trên mặt ruộng; (2) Tạm ngưng bón thêm phân đạm do độ che phủ tán lá dày (NDVI > 0.7, nguy cơ dư đạm); (3) Tranh thủ tạnh ráo buổi chiều phun phòng bệnh đạo ôn cổ bông bằng hoạt chất Tricyclazole 75WP liều chuẩn 300 g/ha (pha 0.6 g/lít nước, lượng nước phun 500 lít/ha).",
     "dosage_norms_per_ha": {
       "tricyclazole_75wp_gram": 300,
       "spray_water_liter": 500,
       "urea_kg": 0,
-      "potash_kcl_kg": 25
+      "potash_kcl_kg": 25,
+      "kno3_foliar_kg": 0
+    }
+  },
+  {
+    "case_id": "HIST-KHARIF-F-2012-03",
+    "recorded_date": "2012-10-18",
+    "season": "Kharif",
+    "phenophase": "Flowering",
+    "duration": 5,
+    "psi_values": {
+      "Tmax": 32.0,
+      "Tmin": 21.6,
+      "RHmax": 85.0,
+      "RHmin": 61.0,
+      "RF": 40.0
+    },
+    "temp_deviations": {
+      "Tmax": -0.2,
+      "Tmin": 0.5
+    },
+    "crisp_categories": {
+      "Tmax": "Little change",
+      "Tmin": "Little change",
+      "RHmax": "Very high",
+      "RHmin": "High",
+      "RF": "Rather heavy rain"
+    },
+    "agro_context": {
+      "u_soil": "Đất phèn hoạt động",
+      "u_variety": "Giống kháng rầy",
+      "u_pest": "Cảnh báo nhẹ (Mức 1)",
+      "u_ndvi": "NDVI Thấp (<0.3 - Thiếu dinh dưỡng)"
+    },
+    "expert_advisory_en": "During Flowering on active acid sulfate soil under Rather Heavy Rain: Maintain 3-5 cm water layer to prevent alum oxidation while draining excess surface water. Supplement foliar potassium and moderate nitrogen due to low canopy vigor (NDVI < 0.3).",
+    "expert_advisory_vi": "Giai đoạn Trổ bông trên nền đất phèn hoạt động có mưa khá to và tán lá thưa (NDVI < 0.3): (1) Điều tiết tháo nước mặt nhưng giữ lớp nước đệm 3–5 cm để ém phèn; (2) Bổ sung phân bón lá Kali và lượng đạm vừa phải (25 kg Ure/ha) phục hồi sức sống lá đòng; (3) Phun phòng đạo ôn cổ bông liều 250 g Tricyclazole 75WP/ha.",
+    "dosage_norms_per_ha": {
+      "tricyclazole_75wp_gram": 250,
+      "spray_water_liter": 450,
+      "urea_kg": 25,
+      "potash_kcl_kg": 30,
+      "kno3_foliar_kg": 4
     }
   },
   {
@@ -74,7 +115,48 @@
       "tricyclazole_75wp_gram": 250,
       "spray_water_liter": 400,
       "urea_kg": 35,
-      "potash_kcl_kg": 40
+      "potash_kcl_kg": 40,
+      "kno3_foliar_kg": 0
+    }
+  },
+  {
+    "case_id": "HIST-KHARIF-PI-2010-06",
+    "recorded_date": "2010-10-03",
+    "season": "Kharif",
+    "phenophase": "Panicle Initiation",
+    "duration": 5,
+    "psi_values": {
+      "Tmax": 33.0,
+      "Tmin": 22.5,
+      "RHmax": 79.0,
+      "RHmin": 58.0,
+      "RF": 12.0
+    },
+    "temp_deviations": {
+      "Tmax": 0.5,
+      "Tmin": 0.3
+    },
+    "crisp_categories": {
+      "Tmax": "Little change",
+      "Tmin": "Little change",
+      "RHmax": "High",
+      "RHmin": "Moderate",
+      "RF": "Moderate rain"
+    },
+    "agro_context": {
+      "u_soil": "Đất phù sa ngọt",
+      "u_variety": "Giống trung ngày",
+      "u_pest": "An toàn (Mức 0)",
+      "u_ndvi": "NDVI Chuẩn (0.3-0.6)"
+    },
+    "expert_advisory_en": "At Panicle Initiation under Moderate Rain and Normal Canopy (NDVI 0.3-0.6): Apply panicle fertilizer (Urea + MOP) at 3-5 cm shallow water level.",
+    "expert_advisory_vi": "Giai đoạn Làm đòng (Đón đòng) trong điều kiện mưa vừa và sinh khối chuẩn (NDVI 0.3–0.6): (1) Giữ mực nước nông 3–5 cm; (2) Bón phân đón đòng theo tiêu chuẩn (40 kg Ure/ha + 35 kg KCl/ha) giúp phân hóa gié hoa tối ưu.",
+    "dosage_norms_per_ha": {
+      "tricyclazole_75wp_gram": 0,
+      "spray_water_liter": 0,
+      "urea_kg": 40,
+      "potash_kcl_kg": 35,
+      "kno3_foliar_kg": 0
     }
   },
   {
@@ -113,7 +195,7 @@
       "tricyclazole_75wp_gram": 0,
       "kno3_foliar_kg": 5,
       "spray_water_liter": 400,
-      "urea_kg": 0,
+      "urea_kg": 25,
       "potash_kcl_kg": 30
     }
   },
@@ -142,7 +224,7 @@
       "RF": "No rain"
     },
     "agro_context": {
-      "u_soil": "Đất phù sa ngọt",
+      "u_soil": "Đất cát pha khô hạn",
       "u_variety": "Giống ngắn ngày (90-100 ngày)",
       "u_pest": "An toàn (Mức 0)",
       "u_ndvi": "NDVI Chuẩn (0.3-0.6)"
@@ -153,7 +235,8 @@
       "tricyclazole_75wp_gram": 0,
       "spray_water_liter": 0,
       "urea_kg": 0,
-      "potash_kcl_kg": 0
+      "potash_kcl_kg": 0,
+      "kno3_foliar_kg": 0
     }
   }
 ]
