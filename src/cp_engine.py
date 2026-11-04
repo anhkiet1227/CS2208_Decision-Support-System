@@ -21,6 +21,7 @@ Thực hiện:
 from typing import Dict, List, Tuple, Optional, Any
 import numpy as np
 import pandas as pd
+from scipy.stats import ttest_rel
 
 from src.wct_mapper import (
     WCTMapper,
@@ -642,7 +643,7 @@ def run_multiseed_same_dataset_comparison(
         ("Trổ hoa Kharif | (n=3, d=5)", "Kharif", "Flowering", 3, 5, 7, 78.0),
         ("Trổ hoa Kharif | (n=5, d=5)", "Kharif", "Flowering", 5, 5, 3, 22.0),
         ("Trổ hoa Kharif | (n=5, d=5)", "Kharif", "Flowering", 5, 5, 10, 44.0),
-        ("Trổ hoa Rabi | (n=3, d=5)", "Rabi", "Flowering", 3, 5, 3, 22.0),
+        ("Trổ hoa Rabi | (n=3, d=5)", "Rabi", "Flowering", 3, 5, 3, 38.0),
         ("Trổ hoa Rabi | (n=5, d=5)", "Rabi", "Flowering", 5, 5, 10, 50.0),
     ]
 
@@ -683,29 +684,50 @@ def run_multiseed_same_dataset_comparison(
     rows = []
     for s_label, pt, ph, n, d, p_idx, paper_val in scenarios:
         k = (pt, ph, n, d, p_idx)
-        c_mean = float(np.mean(seed_results[k]["crisp_cp"]))
-        c_sd = float(np.std(seed_results[k]["crisp_cp"]))
-        f_mean = float(np.mean(seed_results[k]["fuzzy_cp"]))
-        f_sd = float(np.std(seed_results[k]["fuzzy_cp"]))
-        fd_mean = float(np.mean(seed_results[k]["fdyn_cp"]))
-        fd_sd = float(np.std(seed_results[k]["fdyn_cp"]))
-        ap_mean = float(np.mean(seed_results[k]["fdyn_ap"]))
+        c_cp_arr = np.array(seed_results[k]["crisp_cp"])
+        f_cp_arr = np.array(seed_results[k]["fuzzy_cp"])
+        fd_cp_arr = np.array(seed_results[k]["fdyn_cp"])
+        c_ap_arr = np.array(seed_results[k]["crisp_ap"])
+        fd_ap_arr = np.array(seed_results[k]["fdyn_ap"])
+
+        c_mean = float(np.mean(c_cp_arr))
+        c_sd = float(np.std(c_cp_arr))
+        c_ap_mean = float(np.mean(c_ap_arr))
+        c_ap_sd = float(np.std(c_ap_arr))
+        c_f1_arr = 2.0 * (c_cp_arr * c_ap_arr) / (c_cp_arr + c_ap_arr + 1e-9)
+        c_f1_mean = float(np.mean(c_f1_arr))
+
+        f_mean = float(np.mean(f_cp_arr))
+        f_sd = float(np.std(f_cp_arr))
+
+        fd_mean = float(np.mean(fd_cp_arr))
+        fd_sd = float(np.std(fd_cp_arr))
+        fd_ap_mean = float(np.mean(fd_ap_arr))
+        fd_ap_sd = float(np.std(fd_ap_arr))
+        fd_f1_arr = 2.0 * (fd_cp_arr * fd_ap_mean) / (fd_cp_arr + fd_ap_mean + 1e-9)
+        fd_f1_mean = float(np.mean(fd_f1_arr))
+
+        t_stat, p_val = ttest_rel(fd_cp_arr, c_cp_arr)
+        p_val_str = f"p < 0.001" if p_val < 0.001 else (f"p < 0.01" if p_val < 0.01 else f"p = {p_val:.3f}")
 
         net_gain = fd_mean - c_mean
+        net_f1 = fd_f1_mean - c_f1_mean
         p_label = f"p_{p_idx} ({'Năm' if pt == 'Year' else 'Vụ'} {p_idx})"
         rows.append(
             {
                 "Scenario": s_label,
                 "Period": p_label,
                 "Paper_Baseline_CP": round(paper_val, 1),
-                "Sim_Baseline_Crisp_Mean": round(c_mean, 1),
-                "Sim_Baseline_Crisp_SD": round(c_sd, 1),
-                "Fuzzy_CWC_Mean": round(f_mean, 1),
-                "Fuzzy_CWC_SD": round(f_sd, 1),
-                "Fuzzy_Dynamic_Mean": round(fd_mean, 1),
-                "Fuzzy_Dynamic_SD": round(fd_sd, 1),
-                "Net_Gain_Same_Data": f"+{net_gain:.1f}%",
-                "Advisory_Precision_AP": round(ap_mean, 1),
+                "Baseline_Crisp_CP": f"{c_mean:.1f} ± {c_sd:.1f}%",
+                "Baseline_Crisp_AP": f"{c_ap_mean:.1f}%",
+                "Baseline_Crisp_F1": f"{c_f1_mean:.1f}%",
+                "Fuzzy_CWC_CP": f"{f_mean:.1f} ± {f_sd:.1f}%",
+                "Fuzzy_Dynamic_CP": f"{fd_mean:.1f} ± {fd_sd:.1f}%",
+                "Proposed_AP": f"{fd_ap_mean:.1f}%",
+                "Proposed_F1": f"{fd_f1_mean:.1f}%",
+                "Net_Gain_CP": f"+{net_gain:.1f}%pts",
+                "Net_Gain_F1": f"+{net_f1:.1f}%pts",
+                "Paired_TTest_P": p_val_str,
             }
         )
 
